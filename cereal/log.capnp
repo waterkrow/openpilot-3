@@ -1958,6 +1958,9 @@ struct OrbKeyFrame {
 
 struct DriverState {
   frameId @0 :UInt32;
+  modelExecutionTime @14 :Float32;
+  rawPred @15 :Data;
+
   descriptorDEPRECATED @1 :List(Float32);
   stdDEPRECATED @2 :Float32;
   faceOrientation @3 :List(Float32);
@@ -2134,11 +2137,13 @@ struct Event {
     thumbnail @66: Thumbnail;
     carEvents @68: List(Car.CarEvent);
     carParams @69: Car.CarParams;
-    frontFrame @70: FrameData;
+    frontFrame @70: FrameData; # driver facing camera
     dMonitoringState @71: DMonitoringState;
     liveLocationKalman @72 :LiveLocationKalman;
     sentinel @73 :Sentinel;
     wideFrame @74: FrameData;
     modelV2 @75 :ModelDataV2;
+    frontEncodeIdx @76 :EncodeIndex; # driver facing camera
+    wideEncodeIdx @77 :EncodeIndex;
   }
 }
