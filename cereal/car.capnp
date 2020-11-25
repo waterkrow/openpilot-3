@@ -116,10 +116,11 @@ struct CarEvent @0x9b1657f34caf3ad3 {
     canErrorPersistentDEPRECATED @83;
     focusRecoverActiveDEPRECATED @86;
     neosUpdateRequiredDEPRECATED @88;
+    modelLagWarningDEPRECATED @93;
     
-    turningIndicatorOn @93;
-    lkasButtonOff @94;
-    autoLaneChange @95;
+    turningIndicatorOn @94;
+    lkasButtonOff @95;
+    autoLaneChange @96;
   }
 }
 

@@ -68,6 +68,8 @@ class PathPlanner():
     self.auto_lane_change_timer = 0.0
     self.prev_torque_applied = False
 
+    self.use_dynamic_sr = CP.carName in [CAR.GENESIS_G80]
+
   def setup_mpc(self):
     self.libmpc = libmpc_py.libmpc
     self.libmpc.init(MPC_COST_LAT.PATH, MPC_COST_LAT.LANE, MPC_COST_LAT.HEADING, self.steer_rate_cost_prev)
@@ -85,7 +87,6 @@ class PathPlanner():
     self.angle_steers_des_time = 0.0
 
   def update(self, sm, pm, CP, VM):
-
     v_ego = sm['carState'].vEgo
     angle_steers = sm['carState'].steeringAngle
     active = sm['controlsState'].active
@@ -105,10 +106,13 @@ class PathPlanner():
     # Update vehicle model
     x = max(sm['liveParameters'].stiffnessFactor, 0.1)
 
-    if ntune_isEnabled('useLiveSteerRatio'):
-      sr = max(sm['liveParameters'].steerRatio, 0.1)
+    if self.use_dynamic_sr:
+      sr = interp(abs(self.angle_steers_des_mpc), [5., 15.], [11.8, 16.2])
     else:
-      sr = max(ntune_get('steerRatio'), 0.1)
+      if ntune_isEnabled('useLiveSteerRatio'):
+        sr = max(sm['liveParameters'].steerRatio, 0.1)
+      else:
+        sr = max(ntune_get('steerRatio'), 0.1)
 
     VM.update_params(x, sr)
 

@@ -128,7 +128,7 @@ class CarController():
 
     # Disable steering while turning blinker on and speed below 60 kph
     if CS.out.leftBlinker or CS.out.rightBlinker:
-      self.turning_signal_timer = 0.5 / DT_CTRL  # Disable for 1.0 Seconds after blinker turned off
+      self.turning_signal_timer = 0.5 / DT_CTRL  # Disable for 0.5 Seconds after blinker turned off
     if self.turning_indicator_alert: # set and clear by interface
       lkas_active = 0
     if self.turning_signal_timer > 0:
@@ -186,10 +186,10 @@ class CarController():
                                      CS.lkas11, sys_warning, sys_state, enabled, left_lane, right_lane,
                                      left_lane_warning, right_lane_warning, 1))
     if frame % 2 and CS.mdps_bus:  # send clu11 to mdps if it is not on bus 0
-      can_sends.append(create_clu11(self.packer, frame, CS.mdps_bus, CS.clu11, Buttons.NONE, enabled_speed))
+      can_sends.append(create_clu11(self.packer, frame // 2 % 0x10, CS.mdps_bus, CS.clu11, Buttons.NONE, enabled_speed))
 
     if pcm_cancel_cmd and self.longcontrol:
-      can_sends.append(create_clu11(self.packer, frame, CS.scc_bus, CS.clu11, Buttons.CANCEL, clu11_speed))
+      can_sends.append(create_clu11(self.packer, frame % 0x10, CS.scc_bus, CS.clu11, Buttons.CANCEL, clu11_speed))
 
     # fix auto resume - by neokii
     if CS.out.cruiseState.standstill:
@@ -202,12 +202,12 @@ class CarController():
         self.resume_wait_timer -= 1
 
       elif CS.lead_distance != self.last_lead_distance:
-        can_sends.append(create_clu11(self.packer, frame, CS.scc_bus, CS.clu11, Buttons.RES_ACCEL, clu11_speed))
+        can_sends.append(create_clu11(self.packer, self.resume_cnt, CS.scc_bus, CS.clu11, Buttons.RES_ACCEL, clu11_speed))
         self.resume_cnt += 1
 
-        if self.resume_cnt > 5:
+        if self.resume_cnt >= 16:
           self.resume_cnt = 0
-          self.resume_wait_timer = int(0.2 / DT_CTRL)
+          self.resume_wait_timer = 20
 
     # reset lead distnce after the car starts moving
     elif self.last_lead_distance != 0:
