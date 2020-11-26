@@ -1,6 +1,9 @@
 import os
 import math
+
+from common.numpy_fast import interp
 from common.realtime import sec_since_boot, DT_MDL
+from selfdrive.car.hyundai.values import CAR
 from selfdrive.ntune import ntune_get, ntune_isEnabled
 from selfdrive.swaglog import cloudlog
 from selfdrive.controls.lib.lateral_mpc import libmpc_py
