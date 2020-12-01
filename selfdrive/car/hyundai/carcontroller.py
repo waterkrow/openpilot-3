@@ -1,4 +1,5 @@
 import copy
+from random import randint
 
 from cereal import car
 from common.realtime import DT_CTRL
@@ -205,9 +206,9 @@ class CarController():
         can_sends.append(create_clu11(self.packer, self.resume_cnt, CS.scc_bus, CS.clu11, Buttons.RES_ACCEL, clu11_speed))
         self.resume_cnt += 1
 
-        if self.resume_cnt >= 16:
+        if self.resume_cnt >= 6:
           self.resume_cnt = 0
-          self.resume_wait_timer = 20
+          self.resume_wait_timer = randint(8, 15)
 
     # reset lead distnce after the car starts moving
     elif self.last_lead_distance != 0:
