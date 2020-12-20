@@ -169,10 +169,10 @@ static void ui_draw_sidebar_panda_metric(UIState *s) {
   } else if (s->started) {
     if (s->scene.satelliteCount < 6) {
       panda_severity = 1;
-      panda_message = "VEHICLE\nNO GPS";
+      panda_message = "WHITE\nNO GPS";
     } else {
       panda_severity = 0;
-      panda_message = "VEHICLE\nGOOD GPS";
+      panda_message = "BLACK\nGOOD GPS";
     }
   }
   ui_draw_sidebar_metric(s, NULL, NULL, panda_severity, panda_y_offset, panda_message.c_str());
